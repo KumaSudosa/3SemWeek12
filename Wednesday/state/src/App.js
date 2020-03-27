@@ -9,7 +9,7 @@ function App() {
       <br />
       <Timer />
       <br />
-      <DadJoke />
+      <Joke />
     </div>
   );
 }
@@ -46,6 +46,42 @@ function Timer() {
   return <p>The time is: {time}</p>;
 }
 
-function DadJoke() {}
+function Joke() {
+  let [chuckJoke, setChuckJoke] = useState();
+  let [dadJoke, setDadJoke] = useState();
+
+  let getChuckJoke = () => {
+    fetch("https://api.chucknorris.io/jokes/random")
+      .then(res => res.json())
+      .then(chuckData => {
+        setChuckJoke(chuckData.value);
+      });
+  };
+
+  useEffect(() => {
+    setInterval(() => {
+      let connect = {
+        method: "GET",
+        headers: {
+          Accept: "application/json"
+        }
+      };
+      fetch("https://icanhazdadjoke.com/", connect)
+        .then(res => res.json())
+        .then(dadData => {
+          setDadJoke(dadData.value);
+        });
+    }, 10000);
+  }, []);
+
+  return (
+    <>
+      <button onClick={getChuckJoke}>Chuck Norris doesnt joke</button>;
+      <p>{chuckJoke}</p>
+      <br></br>
+      <p>{dadJoke}</p>
+    </>
+  );
+}
 
 export default App;
